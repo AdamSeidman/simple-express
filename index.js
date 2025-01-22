@@ -67,12 +67,12 @@ class SimpleServer {
             }
             return 403
         }
-        this.app.get('/perms', (req, res) => {
-            if (checkPerms(req, 1) === 400) {
+        this.app.get('/perms', (request, response) => {
+            if (checkPerms(request, 1) === 400) {
                 return response.status(400).json({})
             }
             response.send({
-                level: pwdToPermLevel(req.query.pwd)
+                level: pwdToPermLevel(request.query.pwd)
             })
         })
 
@@ -88,6 +88,9 @@ class SimpleServer {
             this.getTable = []
         }
         this.getTable.forEach(item => {
+            if (item === '' || item === 'perms') {
+                log(`Warning! Will not re-define endpoint for "${item}"`)
+            }
             this.app.get(`/${item.endpoint}`, async (request, response) => {
                 log(`GET ${request.url}`)
                 const perms = checkPerms(request, item.perms)
