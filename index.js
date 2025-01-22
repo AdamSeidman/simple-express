@@ -17,6 +17,7 @@ class SimpleServer {
         this.rootFn = config.root
         this.getTable = config.GET
         this.postTable = config.POST
+        this.static = config.static
         this.log = config.log
         if (typeof config.port === 'number') {
             this.port = config.port
@@ -82,6 +83,10 @@ class SimpleServer {
             } else if (this.log) {
                 console.log(...params)
             }
+        }
+
+        if (this.static) {
+            this.app.use(express.static(this.static))
         }
 
         if (!Array.isArray(this.getTable)) {
